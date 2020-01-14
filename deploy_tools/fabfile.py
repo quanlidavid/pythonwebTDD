@@ -48,7 +48,7 @@ def _update_database(source_folder):
 def _install_apps():
     run('sudo apt-get update')
     run('sudo apt-get install nginx')
-    run('sudo apt-get install python3.6-venv')
+    run('sudo apt-get install python3-venv')
     run('sudo apt-get install git')
 
 def deploy():

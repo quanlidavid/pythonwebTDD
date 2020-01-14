@@ -59,8 +59,8 @@ def _nginx_and_gunicorn_config(source_folder):
     run('sudo systemctl daemon-reload')
     run('sudo systemctl start nginx')
     run('sudo systemctl reload nginx')
-    run('sudo systemctl enable gunicorn-{env.host}')
-    run('sudo systemctl start gunicorn-{env.host}')
+    run(f'sudo systemctl enable gunicorn-{env.host}')
+    run(f'sudo systemctl start gunicorn-{env.host}')
 
 
 def deploy():

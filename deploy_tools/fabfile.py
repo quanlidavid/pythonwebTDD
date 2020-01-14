@@ -51,6 +51,18 @@ def _install_apps():
     run('sudo apt-get install python3-venv')
     run('sudo apt-get install git')
 
+def _nginx_and_gunicorn_config(source_folder):
+    run(f'sed "s/SITENAME/{env.host}/g" {source_folder}/deploy_tools/nginx.template.conf | sudo tee /etc/nginx/sites-available/{env.host}')
+    run(f'sudo ln -s /etc/nginx/sites-available/{env.host} /etc/nginx/sites-enabled/{env.host}')
+    run(f'sed "s/SITENAME/{env.host}/g" {source_folder}/deploy_tools/gunicorn-systemd.template.service | sudo tee /etc/systemd/system/gunicorn-{env.host}.service')
+    run('sudo rm /etc/nginx/sites-enabled/default')
+    run('sudo systemctl daemon-reload')
+    run('sudo systemctl start nginx')
+    run('sudo systemctl reload nginx')
+    run('sudo systemctl enable gunicorn-{env.host}')
+    run('sudo systemctl start gunicorn-{env.host}')
+
+
 def deploy():
     _install_apps()
     site_folder = f'/home/{env.user}/sites/{env.host}'
@@ -61,3 +73,4 @@ def deploy():
     _update_virtualenv(source_folder)
     _update_static_files(source_folder)
     _update_database(source_folder)
+    _nginx_and_gunicorn_config(source_folder)

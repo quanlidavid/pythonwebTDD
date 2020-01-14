@@ -45,8 +45,14 @@ def _update_static_files(source_folder):
 def _update_database(source_folder):
     run(f'cd {source_folder} && ../virtualenv/bin/python manage.py migrate --noinput')
 
+def _install_apps():
+    run('sudo apt-get update')
+    run('sudo apt-get install nginx')
+    run('sudo apt-get install python3.6-venv')
+    run('sudo apt-get install git')
 
 def deploy():
+    _install_apps()
     site_folder = f'/home/{env.user}/sites/{env.host}'
     source_folder = site_folder + '/source'
     _create_directory_structure_if_necessary(site_folder)
